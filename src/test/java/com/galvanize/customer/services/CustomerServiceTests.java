@@ -27,7 +27,7 @@ public class CustomerServiceTests {
     }
 
     @Test
-    public void getCustomersByLastName() throws Exception {
+    public void getCustomersByState() throws Exception {
     }
 
     @Test
