@@ -9,13 +9,13 @@ import java.util.Date;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long customerId;
+    private Long customerId;
 
     private String firstName;
     private String lastName;
     private String address;
     private String city;
-    private String State;
+    private String state;
     private String zip;
     private String phoneNumber;
 
@@ -23,11 +23,11 @@ public class Customer {
     @JsonFormat(pattern = "DD/MM/yyyy")
     private Date dateJoined;
 
-    public long getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(long customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
@@ -64,11 +64,11 @@ public class Customer {
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        this.state = state;
     }
 
     public String getZip() {
