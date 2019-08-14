@@ -1,4 +1,4 @@
-package com.galvanize.customer.repositories.controllers;
+package com.galvanize.customer.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
