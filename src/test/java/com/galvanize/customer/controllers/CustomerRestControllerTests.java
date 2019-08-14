@@ -52,4 +52,22 @@ public class CustomerRestControllerTests {
     @Test
     public void updateCustomerPhoneNumber() throws Exception {
     }
+
+    private String getJson(){
+        StringBuffer buff = new StringBuffer();
+        buff.append("{\n");
+
+        buff.append("\"firstName\": \"theFirstName\",\n");
+        buff.append("\"lastName\": \"theLastName\",\n");
+        buff.append("\"address\": \"theAddress\",\n");
+        buff.append("\"city\": \"theCity\",\n");
+        buff.append("\"state\": \"theState\",\n");
+        buff.append("\"zip\": \"theZip\",\n");
+        buff.append("\"phoneNumber\": \"520-555-1212\",\n");
+        buff.append("\"joinDate\": \"08/09/2019\"\n");
+
+        buff.append("}");
+
+        return buff.toString();
+    }
 }
