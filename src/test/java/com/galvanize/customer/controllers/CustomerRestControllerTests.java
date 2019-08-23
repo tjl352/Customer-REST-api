@@ -59,10 +59,9 @@ public class CustomerRestControllerTests {
             customer.setPhoneNumber("111-111-111" + i);
             customer.setDateJoined(new Date());
 
+            repository.save(customer);
             customers.add(customer);
         }
-
-        repository.saveAll(customers);
     }
 
     @Test
