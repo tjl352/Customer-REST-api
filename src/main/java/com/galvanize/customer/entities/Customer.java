@@ -15,7 +15,7 @@ public class Customer {
     private String lastName;
     private String address;
     private String city;
-    private String State;
+    private String state;
     private String zip;
     private String phoneNumber;
 
@@ -64,11 +64,11 @@ public class Customer {
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        state = state;
     }
 
     public String getZip() {
