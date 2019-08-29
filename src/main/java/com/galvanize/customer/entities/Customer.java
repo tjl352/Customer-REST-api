@@ -68,7 +68,7 @@ public class Customer {
     }
 
     public void setState(String state) {
-        state = state;
+        this.state = state;
     }
 
     public String getZip() {
