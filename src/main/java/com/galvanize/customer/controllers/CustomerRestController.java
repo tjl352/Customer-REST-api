@@ -13,27 +13,28 @@ public class CustomerRestController {
     @Autowired
     CustomerService service;
 
-    @PostMapping("/add")
+    @PostMapping("/customer")
     public Customer addCustomer(@RequestBody Customer c){
         return service.addCustomer(c);
     }
 
-    @GetMapping("/all/{state}")
-    public List<Customer> getCustomersByState(@PathVariable String state){
+    //@GetMapping("/customers")
+    @RequestMapping("/customers")
+    public List<Customer> getCustomersByState(@RequestParam(value = "state", required = true) String state){
         return service.getCustomersByState(state);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/customers")
     public List<Customer> getAllCustomers(){
         return service.getAllCustomers();
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/customer/{id}")
     public Customer getCustomerById(@PathVariable Long id){
         return service.getCustomerById(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/customer")
     public Customer updateCustomerPhoneNumber(@RequestBody Customer c){
         return service.updateCustomerPhoneNumber(c);
     }

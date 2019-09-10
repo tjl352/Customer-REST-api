@@ -6,7 +6,6 @@ import com.galvanize.customer.services.CustomerService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +40,6 @@ public class CustomerRestControllerTests {
     @Before
     public void setUp() throws Exception {
         c = new Customer();
-        c.setCustomerId(312L);
         c.setFirstName("Jim");
         c.setLastName("Jones");
         c.setAddress("111 Main St");
@@ -49,11 +47,12 @@ public class CustomerRestControllerTests {
         c.setState("TX");
         c.setZip("90210");
         c.setPhoneNumber("111-222-3333");
+        repository.save(c);
     }
 
     @Test
     public void addCustomer() throws Exception {
-        MockHttpServletRequestBuilder postRequest = post("/add")
+        MockHttpServletRequestBuilder postRequest = post("/customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getJson());
         mvc.perform(postRequest)
@@ -63,32 +62,30 @@ public class CustomerRestControllerTests {
 
     @Test
     public void getCustomersByState() throws Exception {
-        addCustomer();
-
-        mvc.perform(get("/all/DC"))
+        mvc.perform(get("/customers?state=TX"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].lastName").value("Jones"));
     }
 
     @Test
     public void getAllCustomers() throws Exception {
-        mvc.perform(get("/all"))
+        mvc.perform(get("/customers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Jim"));
     }
 
     @Test
     public void getCustomerById() throws Exception {
-        mvc.perform(get("/get/312"))
+        mvc.perform(get("/customer/" + c.getCustomerId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Jim"));
     }
 
     @Test
     public void updateCustomerPhoneNumber() throws Exception {
-        MockHttpServletRequestBuilder putRequest = put("/update")
+        MockHttpServletRequestBuilder putRequest = put("/customer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateJson());
+                .content(getJson());
         mvc.perform(putRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phoneNumber").value("520-555-1212"));
@@ -104,24 +101,6 @@ public class CustomerRestControllerTests {
         buff.append("\"city\": \"Washington\",\n");
         buff.append("\"state\": \"DC\",\n");
         buff.append("\"zip\": \"20001\",\n");
-        buff.append("\"phoneNumber\": \"520-555-1212\",\n");
-        buff.append("\"joinDate\": \"08/09/2019\"\n");
-
-        buff.append("}");
-
-        return buff.toString();
-    }
-
-    private String updateJson(){
-        StringBuffer buff = new StringBuffer();
-        buff.append("{\n");
-
-        buff.append("\"firstName\": \"Jim\",\n");
-        buff.append("\"lastName\": \"Jones\",\n");
-        buff.append("\"address\": \"111 Main St\",\n");
-        buff.append("\"city\": \"Dallas\",\n");
-        buff.append("\"state\": \"TX\",\n");
-        buff.append("\"zip\": \"90210\",\n");
         buff.append("\"phoneNumber\": \"520-555-1212\",\n");
         buff.append("\"joinDate\": \"08/09/2019\"\n");
 

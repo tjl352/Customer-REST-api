@@ -1,6 +1,7 @@
 package com.galvanize.customer.services;
 
 import com.galvanize.customer.entities.Customer;
+import com.galvanize.customer.repositories.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,11 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-
-import java.math.BigInteger;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -23,12 +23,14 @@ public class CustomerServiceTests {
     @Autowired
     CustomerService service;
 
+    @Autowired
+    CustomerRepository repository;
+
     Customer c;
 
     @Before
     public void setUp() throws Exception {
         c = new Customer();
-        c.setCustomerId(312L);
         c.setFirstName("Jim");
         c.setLastName("Jones");
         c.setAddress("111 Main St");
@@ -36,6 +38,7 @@ public class CustomerServiceTests {
         c.setState("TX");
         c.setZip("90210");
         c.setPhoneNumber("111-222-3333");
+        repository.save(c);
     }
 
     @Test
@@ -60,7 +63,7 @@ public class CustomerServiceTests {
 
     @Test
     public void getCustomerById() throws Exception {
-        Customer c1 = service.getCustomerById(312L);
+        Customer c1 = service.getCustomerById(c.getCustomerId());
         assertEquals("Jones", c1.getLastName());
     }
 
