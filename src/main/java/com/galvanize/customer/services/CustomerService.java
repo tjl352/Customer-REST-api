@@ -12,9 +12,13 @@ import java.util.List;
 @Service @Component
 public class CustomerService {
 
-    @Autowired
+    //@Autowired
     CustomerRepository repository;
 
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository){
+        this.repository = customerRepository;
+    }
 
     public Customer addCustomer(Customer c){
         return repository.save(c);

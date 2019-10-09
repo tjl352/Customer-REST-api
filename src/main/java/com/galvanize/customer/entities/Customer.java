@@ -19,6 +19,15 @@ public class Customer {
     private String zip;
     private String phoneNumber;
 
+    public Customer() {
+    }
+
+    public Customer(Long id, String firstName, String state) {
+        this.customerId = id;
+        this.firstName = firstName;
+        this.state = state;
+    }
+
     @Column(columnDefinition = "date", name = "join_date")
     @JsonFormat(pattern = "DD/MM/yyyy")
     private Date dateJoined;

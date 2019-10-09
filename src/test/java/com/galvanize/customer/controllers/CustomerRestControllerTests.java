@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,30 +18,33 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@Transactional
+
+@WebMvcTest(CustomerRestController.class)
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
 public class CustomerRestControllerTests {
 
     @Autowired
     MockMvc mvc;
 
-    @Autowired
+    @MockBean
     CustomerService service;
 
-    @Autowired
-    CustomerRepository repository;
-
     Customer c;
+    List<Customer> list = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
         c = new Customer();
+        c.setCustomerId(10l);
         c.setFirstName("Jim");
         c.setLastName("Jones");
         c.setAddress("111 Main St");
@@ -47,35 +52,39 @@ public class CustomerRestControllerTests {
         c.setState("TX");
         c.setZip("90210");
         c.setPhoneNumber("111-222-3333");
-        repository.save(c);
-    }
-
-    @Test
-    public void addCustomer() throws Exception {
-        MockHttpServletRequestBuilder postRequest = post("/customer")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(getJson());
-        mvc.perform(postRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Bob"));
-    }
-
-    @Test
-    public void getCustomersByState() throws Exception {
-        mvc.perform(get("/customers?state=TX"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].lastName").value("Jones"));
+        for (int i = 0; i < 5; i++) {
+            list.add(new Customer(Long.valueOf(i), "Bob", "TX"));
+        }
     }
 
     @Test
     public void getAllCustomers() throws Exception {
+        when(service.getAllCustomers()).thenReturn(list);
         mvc.perform(get("/customers"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("Jim"));
+                .andExpect(jsonPath("$[0].firstName").value("Bob"));
+    }
+
+    @Test
+    public void addCustomer() throws Exception {
+        when(service.addCustomer(any())).thenReturn(c);
+        MockHttpServletRequestBuilder postRequest = post("/customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(getJson());
+        mvc.perform(postRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getCustomersByState() throws Exception {
+        when(service.getCustomersByState("TX")).thenReturn(list);
+        mvc.perform(get("/customers?state=TX"))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void getCustomerById() throws Exception {
+        when(service.getCustomerById(10l)).thenReturn(c);
         mvc.perform(get("/customer/" + c.getCustomerId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Jim"));
