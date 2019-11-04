@@ -5,37 +5,29 @@ import com.galvanize.customer.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class CustomerRestController {
 
     @Autowired
-    CustomerService service;
+    CustomerService customerService;
 
     @PostMapping("/customer")
     public Customer addCustomer(@RequestBody Customer c){
-        return service.addCustomer(c);
-    }
-
-    //@GetMapping("/customers")
-    @RequestMapping("/customers")
-    public List<Customer> getCustomersByState(@RequestParam(value = "state", required = true) String state){
-        return service.getCustomersByState(state);
-    }
-
-    @GetMapping("/customers")
-    public List<Customer> getAllCustomers(){
-        return service.getAllCustomers();
+        return customerService.addCustomer(c);
     }
 
     @GetMapping("/customer/{id}")
-    public Customer getCustomerById(@PathVariable Long id){
-        return service.getCustomerById(id);
+    public Customer getCustomer(@PathVariable Long id){
+        return customerService.getOneCustomerById(id);
     }
 
     @PutMapping("/customer")
-    public Customer updateCustomerPhoneNumber(@RequestBody Customer c){
-        return service.updateCustomerPhoneNumber(c);
+    public Customer updateCustomer(@RequestBody Customer c){
+        return customerService.updateCustomer(c);
+    }
+
+    @DeleteMapping("/customer")
+    public void deleteCustomer(@RequestBody Customer c){
+        customerService.deleteCustomer(c);
     }
 }

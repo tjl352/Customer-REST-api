@@ -3,36 +3,33 @@ package com.galvanize.customer.services;
 import com.galvanize.customer.entities.Customer;
 import com.galvanize.customer.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
-@Service @Component
+@Service
 public class CustomerService {
 
     @Autowired
-    CustomerRepository repository;
+    CustomerRepository customerRepository;
 
-
-    public Customer addCustomer(Customer c){
-        return repository.save(c);
+    public Customer getOneCustomerById(long customerId) {
+        return customerRepository.getOne(customerId);
     }
 
     public List<Customer> getAllCustomers() {
-        return repository.findAll();
+        return customerRepository.findAll();
     }
 
-    public List<Customer> getCustomersByState(String state) {
-        return repository.getCustomersByState(state);
+    public void deleteCustomer(Customer c) {
+        customerRepository.delete(c);
     }
 
-    public Customer getCustomerById(Long id){
-        return repository.findById(id).get();
+    public Customer addCustomer(Customer c) {
+        return customerRepository.save(c);
     }
 
-    public Customer updateCustomerPhoneNumber(Customer c) {
-        return repository.save(c);
+    public Customer updateCustomer(Customer c) {
+        return customerRepository.save(c);
     }
 }

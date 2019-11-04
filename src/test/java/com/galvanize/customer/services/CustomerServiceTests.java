@@ -8,25 +8,22 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.List;
+import static junit.framework.TestCase.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+@RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-@RunWith(SpringRunner.class)
 public class CustomerServiceTests {
 
     @Autowired
-    CustomerService service;
+    CustomerService customerService;
 
     @Autowired
-    CustomerRepository repository;
+    CustomerRepository customerRepository;
 
-    Customer c;
+    private Customer c;
 
     @Before
     public void setUp() throws Exception {
@@ -38,39 +35,53 @@ public class CustomerServiceTests {
         c.setState("TX");
         c.setZip("90210");
         c.setPhoneNumber("111-222-3333");
-        repository.save(c);
+        customerRepository.save(c);
     }
 
     @Test
-    public void addCustomer() throws Exception {
-        service.addCustomer(c);
-        List<Customer> list = service.getAllCustomers();
-        assertTrue(list.size() > 0);
+    public void exists(){
+        assertNotNull(customerService);
     }
 
     @Test
-    public void getCustomersByState() throws Exception {
-        List<Customer> list = service.getCustomersByState("TX");
-        assertTrue(list.size() > 0);
-        assertEquals("Jim", list.get(0).getFirstName());
+    public void getOneCustomerById(){
+        assertEquals("Jim", customerService.getOneCustomerById(c.getCustomerId()).getFirstName());
     }
 
     @Test
-    public void getAllCustomers() throws Exception {
-        List<Customer> list = service.getAllCustomers();
-        assertTrue(list.size() > 0);
+    public void getAllCustomers(){
+        for(Customer c: customerService.getAllCustomers()){
+            assertEquals("Jim", customerService.getAllCustomers().get(0).getFirstName());
+        }
     }
 
-    @Test
-    public void getCustomerById() throws Exception {
-        Customer c1 = service.getCustomerById(c.getCustomerId());
-        assertEquals("Jones", c1.getLastName());
-    }
+   @Test
+   public void addCustomer(){
+       Customer c1 = new Customer();
+       c1.setFirstName("Tim");
+       c1.setLastName("Jones");
+       c1.setAddress("111 Main St");
+       c1.setCity("Dallas");
+       c1.setState("TX");
+       c1.setZip("90210");
+       c1.setPhoneNumber("111-222-3333");
+       customerRepository.save(c1);
+        customerService.addCustomer(c1);
+        assertEquals("Tim", customerService.getOneCustomerById(c1.getCustomerId()).getFirstName());
+   }
 
-    @Test
-    public void updateCustomerPhoneNumber() throws Exception {
-        c.setPhoneNumber("777-888-9999");
-        Customer c1 = service.updateCustomerPhoneNumber(c);
-        assertEquals("777-888-9999", c1.getPhoneNumber());
-    }
+   @Test
+    public void updateCustomer(){
+       Customer c1 = new Customer();
+       c1.setCustomerId(c.getCustomerId());
+       c1.setFirstName("Tim");
+       c1.setLastName("Jones");
+       c1.setAddress("111 Main St");
+       c1.setCity("Dallas");
+       c1.setState("TX");
+       c1.setZip("90210");
+       c1.setPhoneNumber("111-222-3333");
+        customerService.updateCustomer(c1);
+       assertEquals("Tim", customerService.getOneCustomerById(c.getCustomerId()).getFirstName());
+   }
 }
